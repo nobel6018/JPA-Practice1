@@ -1,0 +1,22 @@
+# 스프링부트에서는 datasource: jpa: 다 생략해도
+# 기본적으로 jdbc:h2:mem:uuid 로 in-memory 로 돌린다
+# 기본적으로 create-drop으로 되어 있다라고는 하는데 create인거 같기도 하다
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    properties:
+#      hibernate:
+#        show_sql: true  # system out으로 찍는거
+#        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
