@@ -1,5 +1,6 @@
 package com.cloudy.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Member {
 
     @Id
@@ -29,6 +31,9 @@ public class Member {
     @Embedded
     private Address address;
 
+    // Entity 노출하면 API 스펙이 Entity 변경에 바인딩이 되고 API 스펙이 변경된
+    // presentation 로직이 들어오면 안된다!!
+    @JsonIgnore
     // Member.Orders를 변경하면 Order의 fk가 변경되지 않는다
     // 왜냐하면 거울이기 때문이다
     @OneToMany(mappedBy = "member")  // 읽기전용, member 필드에 의해서 거울이 되는 거다

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
+import java.util.stream.Collectors;
 
 // @ResponseBody 는 데이터 자체를 json, xml로 보낸다라는 뜻이다
 // @Controller @ResponseBody
@@ -17,6 +19,40 @@ import javax.validation.constraints.NotEmpty;
 public class MemberApiController {
 
     private final MemberService memberService;
+
+    @GetMapping("/api/v1/members")
+    public List<Member> membersV1() {
+        return memberService.findMembers();
+    }
+
+    @GetMapping("/api/v2/members")
+    public Result<List<MemberDto>> memberV2() {
+        List<Member> findMembers = memberService.findMembers();
+        List<MemberDto> collect = findMembers.stream()
+            .map(m -> new MemberDto(m.getName()))
+            .collect(Collectors.toList());
+
+        return new Result<>(collect.size(), collect);
+    }
+
+    // 추가 요구사항에 대응하기 위해 Result로 감싸준다
+    // 그래서 배열로만 반환하지 않는다
+    // ex. count나 이런거 파라미터 추가해야하는 경우
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private int count;
+        private T data;
+    }
+
+    // 나갈것만 적는다
+    // 특정 API랑 1:1 매핑되서 유지 보수하기 쉽다
+    // Entity를 그대로 반환하지 않아서 Entity 변경에 바로 영향 받지 않는
+    @Data
+    @AllArgsConstructor
+    static class MemberDto {
+        private String name;
+    }
 
     @PostMapping("/api/v1/members")
     public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member) {
