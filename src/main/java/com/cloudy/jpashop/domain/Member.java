@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,13 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    // 문제
+    // 1. Presentation 계층 검증을 위한 로직이 Entity 에 있다
+    // 2. 속성명을 변경시켰을 때 (userName) api 스펙이 변경된다
+    // 엔터티는 여러곳에서 사용되기 때문에 변경될 여지가 많다 여기에 의존하면 안된다
+    // 그래서 DTO를 만들어야 한다
+    // 회원가입 여러 로직을 받을 수가 없다 (소셜 로그인, 간편 로그인 등등)
+    @NotEmpty
     private String name;
 
     @Embedded
