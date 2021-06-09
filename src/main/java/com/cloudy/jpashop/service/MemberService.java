@@ -50,4 +50,20 @@ public class MemberService {
     public Member findOne(Long memberId) {
         return memberRepository.findOne(memberId);
     }
+
+    @Transactional
+    public void update(Long id, String name) {
+        Member member = memberRepository.findOne(id);
+        member.setName(name);
+    }
+
+    // 만약 Member를 반환하면 업데이트하는 커맨드랑
+    // id를 가지고 조회한 뒤에 반환하면 조회까지 하는 꼴이 되어 버린다
+    // 커맨드랑 쿼리랑 철저하게 분리하지 못한다
+    // void가 좋고 id 정도만 반환하는 게 좋다
+//    @Transactional
+//    public Member update(Long id, String name) {
+//        Member member = memberRepository.findOne(id);
+//        member.setName(name);
+//    }
 }
