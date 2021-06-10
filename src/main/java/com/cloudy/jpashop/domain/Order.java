@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY) // 'Many' Orders have 'one' member // entity 이름이 주어
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Member member;  // = new ByteBuddyInterceptor();
 
     // cascade 같은 경우에는 private owner 인 경우에 사용해야한다
     // 두개의 엔터티의 라이프 사이클이 동일한 경우에 사용
