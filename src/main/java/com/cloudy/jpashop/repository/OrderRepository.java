@@ -1,14 +1,13 @@
 package com.cloudy.jpashop.repository;
 
 import com.cloudy.jpashop.domain.Order;
+import com.cloudy.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 @Repository
@@ -60,6 +59,14 @@ public class OrderRepository {
             query = query.setParameter("name", orderSearch.getMemberName());
         }
         return query.getResultList();
+    }
+
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+            "select o from Order o" +
+                " join fetch o.member m" +   // left join fetch 걸면 outer join 할수도 있다
+                " join fetch o.delivery d", Order.class
+        ).getResultList();
     }
 
 //    public List<Order> findAll(OrderSearch orderSearch) {

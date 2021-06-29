@@ -31,8 +31,9 @@ public class Member {
     @Embedded
     private Address address;
 
-    // Entity 노출하면 API 스펙이 Entity 변경에 바인딩이 되고 API 스펙이 변경된
+    // 1. Entity 노출하면 API 스펙이 Entity 변경에 바인딩이 되고 API 스펙이 변경된
     // presentation 로직이 들어오면 안된다!!
+    // 2. Order -> Member -> Order -> Member -> .... 무한루프 돌아서 ignore
     @JsonIgnore
     // Member.Orders를 변경하면 Order의 fk가 변경되지 않는다
     // 왜냐하면 거울이기 때문이다
