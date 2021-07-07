@@ -1,7 +1,6 @@
 package com.cloudy.jpashop.repository;
 
 import com.cloudy.jpashop.domain.Order;
-import com.cloudy.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -67,6 +66,27 @@ public class OrderRepository {
                 " join fetch o.member m" +   // left join fetch 걸면 outer join 할수도 있다
                 " join fetch o.delivery d", Order.class
         ).getResultList();
+    }
+
+    // distinct : sql의 distinct 맞다
+    // sql에서의 distinct는 한 줄 전부가 unique 해야 중복이 제거된다
+    // JPA에서는 distinct가 역할을 하나 더 한다
+    // 애플리케이션에서 가지고 온 뒤에 root entity (여기에서는 Order)가 중복을 걸러서 collection에 담아준다
+
+    // 일대다 fetch join에서는 paging을 하면 안된다
+    // WARNING: firstResult/maxResults specified with collection fetch; applying in memory!
+    // [이유는 sql 결과문에서 어떤걸 잘라야할 지 모른다. 강제로 잘랐다가 결과가 틀어지기 때문에 우선 결과를 애플리케이션에 퍼올린 뒤에 거기에서 paging 한다)
+    // 일대일 or 다대일 관계에서는 fetch join + paging 해도 된다
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+            "select distinct o from Order o" +
+                " join fetch o.member m" +   // 
+                " join fetch o.delivery d" +
+                " join fetch o.orderItems oi" +  // 일대다 관계라서 paging 하면 안된다
+                " join fetch oi.item i", Order.class)
+            .setFirstResult(1)
+            .setMaxResults(100)
+            .getResultList();
     }
 
 //    public List<Order> findAll(OrderSearch orderSearch) {
