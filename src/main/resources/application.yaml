@@ -9,8 +9,9 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        show_sql: true  # system out으로 찍는거
+        show_sql: false  # system out으로 찍는거
         format_sql: true
+        default_batch_fetch_size: 100
 
 logging:
   level:
